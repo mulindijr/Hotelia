@@ -2,7 +2,7 @@ import heroImage from "../assets/hero/hero.jpg";
 
 const AboutSection = () => {
   return (
-    <div className="bg-cyan-50 -mt-40 sm:-mt-20 pt-44 pb-20 sm:pt-40 px-4">
+    <div className="bg-cyan-50 -mt-40 sm:-mt-20 pt-44 pb-40 sm:pt-40 px-4">
       <div className="max-w-7xl mx-auto flex flex-col items-center justify-center gap-16 p-6 sm:p-8 bg-white rounded-2xl shadow-lg">
         {/* First section */}
         <div className="flex flex-col sm:flex-row items-center gap-8 sm:gap-12">
