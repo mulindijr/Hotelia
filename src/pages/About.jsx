@@ -116,7 +116,7 @@ const About = () => {
   return (
     <div className="min-h-screen bg-cyan-50">
       {/* Hero Section */}
-      <section className="relative bg-linear-to-r from-cyan-500 to-cyan-200 text-white py-20 mt-20">
+      <section className="relative bg-linear-to-r from-cyan-600 to-blue-600 text-white py-20 mt-20">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
@@ -213,7 +213,9 @@ const About = () => {
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 text-center">{feature.description}</p>
+                <p className="text-gray-600 text-center">
+                  {feature.description}
+                </p>
               </div>
             ))}
           </div>
