@@ -195,7 +195,7 @@ const GalleryPage = () => {
   return (
     <div className="min-h-screen bg-cyan-50">
       {/* Hero Section */}
-      <section className="relative bg-linear-to-r from-cyan-600 to-blue-700 text-white py-20">
+      <section className="relative bg-linear-to-r from-cyan-600 to-blue-700 text-white py-20 mt-20">
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">Hotel Gallery</h1>
