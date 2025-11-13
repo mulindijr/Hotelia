@@ -11,7 +11,7 @@ const FeaturedRooms = () => {
       name: "Deluxe Ocean View",
       image: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=400&h=300&fit=crop",
       occupants: 2,
-      price: 299,
+      price: 12000,
       rating: 4.8,
       description: "Luxurious room with stunning ocean views and premium amenities"
     },
@@ -20,7 +20,7 @@ const FeaturedRooms = () => {
       name: "Executive Suite",
       image: "https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=400&h=300&fit=crop",
       occupants: 3,
-      price: 399,
+      price: 39999,
       rating: 4.9,
       description: "Spacious suite with separate living area and workspace"
     },
@@ -29,7 +29,7 @@ const FeaturedRooms = () => {
       name: "Family Room",
       image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&h=300&fit=crop",
       occupants: 4,
-      price: 349,
+      price: 34999,
       rating: 4.7,
       description: "Perfect for families with extra space and child-friendly amenities"
     },
@@ -38,7 +38,7 @@ const FeaturedRooms = () => {
       name: "Presidential Suite",
       image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&h=300&fit=crop",
       occupants: 2,
-      price: 599,
+      price: 59999,
       rating: 5.0,
       description: "Ultimate luxury with private balcony and premium services"
     },
@@ -47,7 +47,7 @@ const FeaturedRooms = () => {
       name: "Business Class",
       image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=400&h=300&fit=crop",
       occupants: 2,
-      price: 329,
+      price: 32999,
       rating: 4.6,
       description: "Designed for business travelers with enhanced connectivity"
     },
@@ -56,7 +56,7 @@ const FeaturedRooms = () => {
       name: "Honeymoon Suite",
       image: "https://images.unsplash.com/photo-1564078516393-cf04bd966897?w=400&h=300&fit=crop",
       occupants: 2,
-      price: 459,
+      price: 45999,
       rating: 4.9,
       description: "Romantic getaway with special amenities and privacy"
     }
@@ -155,8 +155,8 @@ const FeaturedRooms = () => {
                   {/* Price and Book Button */}
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-2xl font-bold text-gray-900">
-                        ${room.price}
+                      <span className="text-xl font-bold text-gray-900">
+                        KSh {room.price}
                       </span>
                       <span className="text-gray-600 text-sm ml-1">/night</span>
                     </div>
