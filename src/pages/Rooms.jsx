@@ -182,11 +182,15 @@ const Rooms = () => {
   return (
     <div className="min-h-screen bg-cyan-50">
       {/* Hero Section */}
-      <section className="bg-linear-to-r from-cyan-600 to-blue-600 text-white py-20 mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">Our Rooms & Suites</h1>
+      <section className="relative bg-linear-to-r from-cyan-600 to-blue-700 text-white py-20 mt-20">
+        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            Our Rooms & Suites
+          </h1>
           <p className="text-xl md:text-2xl max-w-3xl mx-auto">
-            Discover the perfect accommodation for your stay, from luxurious suites to comfortable economy rooms
+            Discover the perfect accommodation for your stay, from luxurious
+            suites to comfortable economy rooms
           </p>
         </div>
       </section>
@@ -204,8 +208,8 @@ const Rooms = () => {
                   onClick={() => setActiveTab(category.id)}
                   className={`px-6 py-3 rounded-full font-semibold transition-all duration-200 cursor-pointer ${
                     activeTab === category.id
-                      ? 'bg-cyan-600 text-white shadow-lg'
-                      : 'bg-white text-gray-700 hover:bg-cyan-100 hover:text-cyan-700 shadow-md'
+                      ? "bg-cyan-600 text-white shadow-lg"
+                      : "bg-white text-gray-700 hover:bg-cyan-100 hover:text-cyan-700 shadow-md"
                   }`}
                 >
                   {category.label}
@@ -216,10 +220,15 @@ const Rooms = () => {
             {/* Sort and Results Info */}
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
               <div className="text-gray-600">
-                Showing <span className="font-semibold">{sortedRooms.length}</span> rooms
-                {activeTab !== 'all' && ` in ${roomCategories.find(cat => cat.id === activeTab)?.label}`}
+                Showing{" "}
+                <span className="font-semibold">{sortedRooms.length}</span>{" "}
+                rooms
+                {activeTab !== "all" &&
+                  ` in ${
+                    roomCategories.find((cat) => cat.id === activeTab)?.label
+                  }`}
               </div>
-              
+
               <div className="flex items-center gap-4">
                 <label className="text-gray-700 font-medium">Sort by:</label>
                 <select
@@ -258,7 +267,8 @@ const Rooms = () => {
                 No rooms found
               </h3>
               <p className="text-gray-600">
-                No rooms available in this category. Please try another category.
+                No rooms available in this category. Please try another
+                category.
               </p>
             </div>
           )}
