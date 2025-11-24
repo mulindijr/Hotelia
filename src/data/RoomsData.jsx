@@ -72,7 +72,7 @@ export const roomsData = [
     reviews: 203,
     amenities: ["wifi", "coffee", "air-conditioning", "parking"],
     description: "Designed for business travelers with enhanced connectivity",
-    featured: false
+    featured: true
   },
   {
     id: 6,
@@ -87,7 +87,7 @@ export const roomsData = [
     reviews: 145,
     amenities: ["wifi", "air-conditioning"],
     description: "Comfortable and affordable accommodation with essential amenities",
-    featured: false
+    featured: true
   },
   {
     id: 7,
