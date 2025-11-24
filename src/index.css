@@ -18,3 +18,13 @@
     padding: 20px;
   }
 }
+
+/* Hide scrollbar for all browsers */
+.scroll-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
