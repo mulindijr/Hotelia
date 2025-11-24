@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
-import { Users, Star, Wifi, Coffee, Car, Utensils, Snowflake, Shield } from 'lucide-react';
+import { useState } from 'react';
+import { Users, Wifi, Coffee, Car, Utensils, Snowflake, Shield } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+import { roomsData } from '../data/RoomsData';
+import RoomCard from '../components/RoomCard';
 
 const Rooms = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [sortBy, setSortBy] = useState('featured');
+
+  const navigate = useNavigate();
 
   // Room categories
   const roomCategories = [
@@ -13,130 +18,6 @@ const Rooms = () => {
     { id: 'economy', label: 'Economy' },
     { id: 'family', label: 'Family Rooms' },
     { id: 'business', label: 'Business Class' }
-  ];
-
-  // Room data
-  const roomsData = [
-    {
-      id: 1,
-      name: "Presidential Suite",
-      category: "luxe",
-      image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&h=300&fit=crop",
-      occupants: 2,
-      size: "85 m²",
-      price: 10000,
-      originalPrice: 14999,
-      rating: 5.0,
-      reviews: 128,
-      amenities: ["wifi", "coffee", "air-conditioning", "parking"],
-      description: "Ultimate luxury with private balcony, premium services, and exclusive amenities",
-      featured: true
-    },
-    {
-      id: 2,
-      name: "Deluxe Ocean View",
-      category: "luxe",
-      image: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=400&h=300&fit=crop",
-      occupants: 2,
-      size: "45 m²",
-      price: 8000,
-      originalPrice: 12000,
-      rating: 4.8,
-      reviews: 256,
-      amenities: ["wifi", "coffee", "air-conditioning"],
-      description: "Luxurious room with stunning ocean views and premium amenities",
-      featured: true
-    },
-    {
-      id: 3,
-      name: "Executive Suite",
-      category: "standard",
-      image: "https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=400&h=300&fit=crop",
-      occupants: 3,
-      size: "55 m²",
-      price: 39999,
-      originalPrice: 44999,
-      rating: 4.9,
-      reviews: 189,
-      amenities: ["wifi", "coffee", "air-conditioning", "parking"],
-      description: "Spacious suite with separate living area and workspace",
-      featured: false
-    },
-    {
-      id: 4,
-      name: "Family Room",
-      category: "family",
-      image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&h=300&fit=crop",
-      occupants: 4,
-      size: "60 m²",
-      price: 12345,
-      originalPrice: 39999,
-      rating: 4.7,
-      reviews: 1345,
-      amenities: ["wifi", "coffee", "air-conditioning"],
-      description: "Perfect for families with extra space and child-friendly amenities",
-      featured: false
-    },
-    {
-      id: 5,
-      name: "Business Class",
-      category: "business",
-      image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=400&h=300&fit=crop",
-      occupants: 2,
-      size: "40 m²",
-      price: 20000,
-      originalPrice: 37000,
-      rating: 4.6,
-      reviews: 203,
-      amenities: ["wifi", "coffee", "air-conditioning", "parking"],
-      description: "Designed for business travelers with enhanced connectivity",
-      featured: false
-    },
-    {
-      id: 6,
-      name: "Economy Double",
-      category: "economy",
-      image: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&h=300&fit=crop",
-      occupants: 2,
-      size: "30 m²",
-      price: 2000,
-      originalPrice: 4500,
-      rating: 4.4,
-      reviews: 145,
-      amenities: ["wifi", "air-conditioning"],
-      description: "Comfortable and affordable accommodation with essential amenities",
-      featured: false
-    },
-    {
-      id: 7,
-      name: "Honeymoon Suite",
-      category: "luxe",
-      image: "https://images.unsplash.com/photo-1564078516393-cf04bd966897?w=400&h=300&fit=crop",
-      occupants: 2,
-      size: "50 m²",
-      price: 30000,
-      originalPrice: 49999,
-      rating: 4.9,
-      reviews: 98,
-      amenities: ["wifi", "coffee", "air-conditioning"],
-      description: "Romantic getaway with special amenities and privacy",
-      featured: true
-    },
-    {
-      id: 8,
-      name: "Standard Queen",
-      category: "standard",
-      image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=400&h=300&fit=crop",
-      occupants: 2,
-      size: "35 m²",
-      price: 3400,
-      originalPrice: 6400,
-      rating: 4.5,
-      reviews: 178,
-      amenities: ["wifi", "coffee", "air-conditioning"],
-      description: "Comfortable standard room with all essential amenities",
-      featured: false
-    }
   ];
 
   // Amenity icons mapping
@@ -169,14 +50,9 @@ const Rooms = () => {
     }
   });
 
-  const handleRoomClick = (roomId) => {
-    // Navigate to room details
-    console.log(`Navigating to room details: ${roomId}`);
-  };
-
-  const handleBookNow = (e, roomId) => {
+  const handleBookNow = (e, room) => {
     e.stopPropagation();
-    console.log(`Booking room: ${roomId}`);
+    navigate("/booking", { state: { room } });
   };
 
   return (
@@ -201,12 +77,12 @@ const Rooms = () => {
           {/* Filters and Sort Section */}
           <div className="mb-12">
             {/* Category Tabs */}
-            <div className="flex flex-wrap gap-2 mb-8 justify-center">
+            <div className="flex sm:justify-center gap-3 mb-8 overflow-x-auto scroll-hide snap-x snap-mandatory px-2">
               {roomCategories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => setActiveTab(category.id)}
-                  className={`px-6 py-3 rounded-full font-semibold transition-all duration-200 cursor-pointer ${
+                  className={`px-6 py-3 rounded-full font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer snap-start ${
                     activeTab === category.id
                       ? "bg-cyan-600 text-white shadow-lg"
                       : "bg-white text-gray-700 hover:bg-cyan-100 hover:text-cyan-700 shadow-md"
@@ -222,7 +98,7 @@ const Rooms = () => {
               <div className="text-gray-600">
                 Showing{" "}
                 <span className="font-semibold">{sortedRooms.length}</span>{" "}
-                rooms
+                {sortedRooms.length > 1 ? "rooms" : "room"}
                 {activeTab !== "all" &&
                   ` in ${
                     roomCategories.find((cat) => cat.id === activeTab)?.label
@@ -253,7 +129,6 @@ const Rooms = () => {
                   key={room.id}
                   room={room}
                   amenityIcons={amenityIcons}
-                  onRoomClick={handleRoomClick}
                   onBookNow={handleBookNow}
                 />
               ))}
@@ -274,125 +149,6 @@ const Rooms = () => {
           )}
         </div>
       </section>
-    </div>
-  );
-};
-
-// Room Card Component
-const RoomCard = ({ room, amenityIcons, onRoomClick, onBookNow }) => {
-  const renderStars = (rating) => {
-    return Array.from({ length: 5 }, (_, index) => (
-      <Star
-        key={index}
-        className={`w-4 h-4 ${
-          index < Math.floor(rating) 
-            ? 'fill-yellow-400 text-yellow-400' 
-            : 'fill-gray-300 text-gray-300'
-        }`}
-      />
-    ));
-  };
-
-  return (
-    <div 
-      className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
-      onClick={() => onRoomClick(room.id)}
-    >
-      {/* Room Image */}
-      <div className="relative">
-        <img
-          src={room.image}
-          alt={room.name}
-          className="w-full h-48 object-cover rounded-t-2xl"
-        />
-        
-        {/* Featured Badge */}
-        {room.featured && (
-          <div className="absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-            Featured
-          </div>
-        )}
-
-        {/* Rating Badge */}
-        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 flex items-center gap-1">
-          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-          <span className="text-sm font-semibold text-gray-700">
-            {room.rating}
-          </span>
-        </div>
-
-        {/* Occupants Badge */}
-        <div className="absolute bottom-3 left-3 bg-black/70 text-white px-2 py-1 rounded-full text-sm flex items-center gap-1">
-          <Users className="w-3 h-3" />
-          <span>{room.occupants}</span>
-        </div>
-      </div>
-
-      {/* Room Details */}
-      <div className="p-6">
-        {/* Room Name and Category */}
-        <div className="mb-3">
-          <h3 className="text-xl font-semibold text-gray-900 mb-1 hover:text-cyan-600 transition-colors">
-            {room.name}
-          </h3>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-cyan-600 font-medium capitalize">
-              {room.category} • {room.size}
-            </span>
-          </div>
-        </div>
-
-        {/* Description */}
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-          {room.description}
-        </p>
-
-        {/* Amenities */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {room.amenities.slice(0, 3).map((amenity) => {
-            const AmenityIcon = amenityIcons[amenity]?.icon;
-            return AmenityIcon ? (
-              <div key={amenity} className="flex items-center gap-1 text-gray-500" title={amenityIcons[amenity]?.label}>
-                <AmenityIcon className="w-4 h-4" />
-              </div>
-            ) : null;
-          })}
-          {room.amenities.length > 3 && (
-            <span className="text-xs text-gray-500">+{room.amenities.length - 3} more</span>
-          )}
-        </div>
-
-        {/* Reviews */}
-        <div className="flex items-center gap-2 mb-4">
-          <div className="flex items-center gap-1">
-            {renderStars(room.rating)}
-          </div>
-          <span className="text-sm text-gray-600">({room.reviews} reviews)</span>
-        </div>
-
-        {/* Price and Book Button */}
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-gray-900">
-                KSh {room.price}
-              </span>
-              {room.originalPrice && (
-                <span className="text-sm text-gray-500 line-through">
-                  KSh {room.originalPrice}
-                </span>
-              )}
-            </div>
-            <span className="text-gray-600 text-sm">per night</span>
-          </div>
-          <button
-            onClick={(e) => onBookNow(e, room.id)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold cursor-pointer transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:ring-offset-2"
-          >
-            Book Now
-          </button>
-        </div>
-      </div>
     </div>
   );
 };
