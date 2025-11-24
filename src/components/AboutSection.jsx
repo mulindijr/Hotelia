@@ -1,6 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import heroImage from "../assets/hero/hero.jpg";
 
 const AboutSection = () => {
+
+  const navigate = useNavigate();
+
   return (
     <div className="bg-cyan-50 -mt-40 sm:-mt-20 pt-44 pb-40 sm:pt-40 px-4">
       <div className="max-w-7xl mx-auto flex flex-col items-center justify-center gap-16 p-6 sm:p-8 bg-white rounded-2xl shadow-lg">
@@ -21,7 +25,9 @@ const AboutSection = () => {
               personalized services, we ensure every guest experiences comfort,
               elegance, and a warm welcome that makes you feel right at home.
             </p>
-            <button className="bg-blue-600 hover:bg-blue-700 transition-colors cursor-pointer p-2 sm:p-3 text-base sm:text-lg text-white font-semibold rounded-full w-40 mx-auto sm:mx-0">
+            <button 
+              onClick={() => navigate("/about-us")}
+              className="bg-cyan-500 hover:bg-cyan-600 transition-colors cursor-pointer p-2 sm:p-3 text-base sm:text-lg text-white font-semibold rounded-full w-40 mx-auto sm:mx-0">
               More about us
             </button>
           </div>
@@ -44,7 +50,9 @@ const AboutSection = () => {
               or simply relaxing in our elegant rooms, every moment is crafted
               to create memories that last a lifetime.
             </p>
-            <button className="bg-blue-600 hover:bg-blue-700 transition-colors cursor-pointer p-2 sm:p-3 text-base sm:text-lg text-white font-semibold rounded-full w-40 mx-auto sm:mx-0">
+            <button 
+              onClick={() => navigate("/accommodation")}
+              className="bg-cyan-500 hover:bg-cyan-600 transition-colors cursor-pointer p-2 sm:p-3 text-base sm:text-lg text-white font-semibold rounded-full w-40 mx-auto sm:mx-0">
               Choose a room
             </button>
           </div>
