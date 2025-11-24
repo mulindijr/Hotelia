@@ -57,7 +57,7 @@ const BookingSuccess = () => {
               <span>Home</span>
             </Link>
             <ChevronRight className="w-4 h-4" />
-            <Link to="/accomodation" className="hover:text-gray-800">
+            <Link to="/accommodation" className="hover:text-gray-800">
               Rooms
             </Link>
             <ChevronRight className="w-4 h-4" />
@@ -300,7 +300,7 @@ const BookingSuccess = () => {
           </Link>
 
           <Link
-            to="/accomodation"
+            to="/accommodation"
             className="flex items-center justify-center space-x-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-lg font-semibold transition-colors duration-200 text-center"
           >
             <Star className="w-5 h-5" />

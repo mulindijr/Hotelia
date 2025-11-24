@@ -153,7 +153,7 @@ const Booking = () => {
 
               <ChevronRight className="w-4 h-4" />
 
-              <Link to="/accomodation" className="hover:text-gray-800">
+              <Link to="/accommodation" className="hover:text-gray-800">
                 Rooms
               </Link>
 
