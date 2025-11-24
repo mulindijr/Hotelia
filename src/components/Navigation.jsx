@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate,  Link } from "react-router-dom";
 import { Menu, X, Bookmark, ChevronDown, ChevronUp } from "lucide-react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+
+  const navigate = useNavigate();
 
   const links = [
     { name: "Home", path: "/" },
@@ -17,7 +19,7 @@ const Navbar = () => {
         { name: "Services", path: "/services" },
       ] 
     },
-    { name: "Rooms", path: "/accomodation" },
+    { name: "Rooms", path: "/accommodation" },
     { name: "Restaurant", path: "/restaurant" },
     { name: "Gallery", path: "/gallery" },
     { name: "Contact", path: "/contact" },
@@ -27,7 +29,11 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 w-full z-50 bg-white shadow-sm">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
         {/* Logo */}
-        <h1 className="text-2xl font-bold text-gray-600">Hotelia</h1>
+        <Link to="/">
+          <h1 className="text-2xl font-bold text-gray-600 cursor-pointer">
+            Hotelia
+          </h1>
+        </Link>
 
         {/* Desktop Nav Links */}
         <ul className="hidden md:flex items-center gap-8">
@@ -35,15 +41,15 @@ const Navbar = () => {
             <li key={link.name} className="relative group">
               {/* Parent link */}
               {link.submenu ? (
-                <span className="cursor-pointer transition-colors text-gray-700 hover:text-blue-600">
+                <span className="cursor-pointer transition-colors text-gray-700 hover:text-cyan-600">
                   {link.name}
                 </span>
               ) : (
                 <NavLink
                   to={link.path}
                   className={({ isActive }) =>
-                    `transition-colors text-gray-700 hover:text-blue-600 ${
-                      isActive ? "text-green-800 font-semibold" : ""
+                    `transition-colors text-gray-700 hover:text-cyan-600 ${
+                      isActive ? "text-cyan-500 font-semibold" : ""
                     }`
                   }
                 >
@@ -58,7 +64,7 @@ const Navbar = () => {
                     <li key={sublink.name}>
                       <NavLink
                         to={sublink.path}
-                        className="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-700 transition"
+                        className="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-cyan-700 transition"
                       >
                         {sublink.name}
                       </NavLink>
@@ -71,7 +77,10 @@ const Navbar = () => {
         </ul>
 
         {/* Book Now button (desktop) */}
-        <button className="hidden md:flex items-center gap-2 bg-blue-700 text-white px-5 py-2 rounded-full cursor-pointer hover:bg-blue-500 transition">
+        <button
+          onClick={() => navigate("/accommodation")}
+          className="hidden md:flex items-center gap-2 bg-cyan-500 text-white px-5 py-2 rounded-full cursor-pointer hover:bg-cyan-600 transition"
+        >
           <Bookmark size={24} />
           Book Now
         </button>
@@ -95,7 +104,9 @@ const Navbar = () => {
                 {link.submenu ? (
                   <button
                     onClick={() =>
-                      setOpenDropdown((prev) => (prev === link.name ? null : link.name))
+                      setOpenDropdown((prev) =>
+                        prev === link.name ? null : link.name
+                      )
                     }
                     className="w-full flex justify-between items-center py-2 text-gray-700 font-semibold focus:outline-none"
                   >
@@ -113,8 +124,8 @@ const Navbar = () => {
                     to={link.path}
                     onClick={() => setIsOpen(false)}
                     className={({ isActive }) =>
-                      `block py-2 text-gray-700 hover:text-blue-600 ${
-                        isActive ? "text-blue-600 font-semibold" : ""
+                      `block py-2 text-gray-700 hover:text-cyan-600 ${
+                        isActive ? "text-cyan-600 font-semibold" : ""
                       }`
                     }
                   >
@@ -142,13 +153,15 @@ const Navbar = () => {
             ))}
 
             {/* Mobile Book Now button */}
-            <button className="bg-blue-700 text-white px-5 py-2 rounded-lg hover:bg-blue-800 transition w-full mt-3">
+            <button
+              onClick={() => navigate("/accommodation")}
+              className="bg-cyan-500 text-white px-5 py-2 rounded-lg hover:bg-cyan-600 transition w-full mt-3"
+            >
               Book Now
             </button>
           </ul>
         </div>
       )}
-
     </nav>
   );
 };
