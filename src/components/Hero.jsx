@@ -28,7 +28,7 @@ const Hero = () => {
         {/* Headings */}
         <div className="text-center mb-10 sm:mb-12 px-2">
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight">
-            Welcome to <span className="text-indigo-400">Hotelia</span>
+            Welcome to <span className="text-cyan-500">Hotelia</span>
           </h1>
           <p className="text-base sm:text-xl md:text-2xl text-white/90 max-w-2xl sm:max-w-3xl mx-auto leading-relaxed">
             Experience unmatched comfort and luxury in the heart of paradise.
@@ -101,7 +101,7 @@ const Hero = () => {
             </div>
 
             {/* Button */}
-            <button className="flex items-center justify-center gap-2 bg-indigo-600 text-white font-semibold py-3 rounded-full hover:bg-indigo-700 transition duration-300">
+            <button className="flex items-center justify-center gap-2 bg-cyan-500 text-white font-semibold py-3 rounded-full hover:bg-cyan-600 cursor-pointer transition duration-300">
               <Search className="w-5 h-5" />
               <span className="hidden md:inline">Search</span>
             </button>
@@ -110,7 +110,7 @@ const Hero = () => {
       </div>
 
       {/* Ken Burns keyframes */}
-      <style jsx>{`
+      <style>{`
         @keyframes kenBurns {
           0% {
             transform: scale(1.05);
