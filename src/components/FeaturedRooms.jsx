@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ChevronLeft,
@@ -11,9 +11,12 @@ import {
   Shield,
 } from "lucide-react";
 import RoomCard from "../components/RoomCard";
-import { roomsData } from "../data/RoomsData";
+// import { roomsData } from "../data/RoomsData";
+import API from "../api/api";
 
 const FeaturedRooms = () => {
+  const [rooms, setRooms] = useState([]);
+  const [loading, setLoading] = useState(true);
   const scrollContainerRef = useRef(null);
 
   const navigate = useNavigate();
@@ -30,22 +33,37 @@ const FeaturedRooms = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchFeaturedRooms = async () => {
+      try {
+        const response = await API.get("/rooms");
+        setRooms(response.data);
+      } catch (error) {
+        console.error("Error fetching featured rooms:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedRooms();
+  }, []);
+
   const handleBookNow = (e, room) => {
     e.stopPropagation();
     navigate("/booking", { state: { room } });
   };
 
   // Filter only featured rooms
-  const featuredRooms = roomsData.filter((room) => room.featured);
+  const featuredRooms = rooms.filter((room) => room.featured);
 
   // Amenity icons mapping
   const amenityIcons = {
-    wifi: { icon: Wifi, label: 'Free WiFi' },
-    coffee: { icon: Coffee, label: 'Coffee Maker' },
-    parking: { icon: Car, label: 'Parking' },
-    'air-conditioning': { icon: Snowflake, label: 'Air Conditioning' },
-    breakfast: { icon: Utensils, label: 'Breakfast' },
-    security: { icon: Shield, label: '24/7 Security' }
+    wifi: { icon: Wifi, label: "Free WiFi" },
+    coffee: { icon: Coffee, label: "Coffee Maker" },
+    parking: { icon: Car, label: "Parking" },
+    "air-conditioning": { icon: Snowflake, label: "Air Conditioning" },
+    breakfast: { icon: Utensils, label: "Breakfast" },
+    security: { icon: Shield, label: "24/7 Security" },
   };
 
   return (
@@ -64,21 +82,30 @@ const FeaturedRooms = () => {
 
         {/* Rooms Scroll Container */}
         <div className="relative">
-          <div
-            ref={scrollContainerRef}
-            className="flex overflow-x-auto scrollbar-hide gap-6 pb-8 snap-x snap-mandatory"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          >
-            {featuredRooms.map((room) => (
-              <div key={room.id} className="flex-none w-88 sm:w-96 snap-start">
-                <RoomCard
-                  room={room}
-                  amenityIcons={amenityIcons}
-                  onBookNow={handleBookNow}
-                />
-              </div>
-            ))}
-          </div>
+          {loading ? (
+            <div className="py-20 text-center">
+              <p className="text-gray-600">Loading featured rooms...</p>
+            </div>
+          ) : (
+            <div
+              ref={scrollContainerRef}
+              className="flex overflow-x-auto scrollbar-hide gap-6 pb-8 snap-x snap-mandatory"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              {featuredRooms.map((room) => (
+                <div
+                  key={room.id}
+                  className="flex-none w-88 sm:w-96 snap-start"
+                >
+                  <RoomCard
+                    room={room}
+                    amenityIcons={amenityIcons}
+                    onBookNow={handleBookNow}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Navigation Buttons */}
           <div className="flex justify-end mt-6 space-x-3">
