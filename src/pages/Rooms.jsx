@@ -1,50 +1,79 @@
-import { useState } from 'react';
-import { Users, Wifi, Coffee, Car, Utensils, Snowflake, Shield } from 'lucide-react';
+import { useState, useEffect } from "react";
+import {
+  Users,
+  Wifi,
+  Coffee,
+  Car,
+  Utensils,
+  Snowflake,
+  Shield,
+  Loader2,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { roomsData } from '../data/RoomsData';
-import RoomCard from '../components/RoomCard';
+//import { roomsData } from "../data/RoomsData";
+import API from "../api/api";
+import RoomCard from "../components/RoomCard";
 
 const Rooms = () => {
-  const [activeTab, setActiveTab] = useState('all');
-  const [sortBy, setSortBy] = useState('featured');
+  const [rooms, setRooms] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("all");
+  const [sortBy, setSortBy] = useState("featured");
 
   const navigate = useNavigate();
 
   // Room categories
   const roomCategories = [
-    { id: 'all', label: 'All Rooms' },
-    { id: 'luxe', label: 'Luxe Suites' },
-    { id: 'standard', label: 'Standard' },
-    { id: 'economy', label: 'Economy' },
-    { id: 'family', label: 'Family Rooms' },
-    { id: 'business', label: 'Business Class' }
+    { id: "all", label: "All Rooms" },
+    { id: "luxe", label: "Luxe Suites" },
+    { id: "standard", label: "Standard" },
+    { id: "economy", label: "Economy" },
+    { id: "family", label: "Family Rooms" },
+    { id: "business", label: "Business Class" },
   ];
 
   // Amenity icons mapping
   const amenityIcons = {
-    wifi: { icon: Wifi, label: 'Free WiFi' },
-    coffee: { icon: Coffee, label: 'Coffee Maker' },
-    parking: { icon: Car, label: 'Parking' },
-    'air-conditioning': { icon: Snowflake, label: 'Air Conditioning' },
-    breakfast: { icon: Utensils, label: 'Breakfast' },
-    security: { icon: Shield, label: '24/7 Security' }
+    wifi: { icon: Wifi, label: "Free WiFi" },
+    coffee: { icon: Coffee, label: "Coffee Maker" },
+    parking: { icon: Car, label: "Parking" },
+    "air-conditioning": { icon: Snowflake, label: "Air Conditioning" },
+    breakfast: { icon: Utensils, label: "Breakfast" },
+    security: { icon: Shield, label: "24/7 Security" },
   };
 
+  // Fetch rooms data from API
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const response = await API.get("/rooms");
+        setRooms(response.data);
+      } catch (error) {
+        console.error("Error fetching rooms data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRooms();
+  }, []);
+
   // Filter rooms based on active tab
-  const filteredRooms = activeTab === 'all' 
-    ? roomsData 
-    : roomsData.filter(room => room.category === activeTab);
+  const filteredRooms =
+    activeTab === "all"
+      ? rooms
+      : rooms.filter((room) => room.category === activeTab);
 
   // Sort rooms
   const sortedRooms = [...filteredRooms].sort((a, b) => {
     switch (sortBy) {
-      case 'price-low':
+      case "price-low":
         return a.price - b.price;
-      case 'price-high':
+      case "price-high":
         return b.price - a.price;
-      case 'rating':
+      case "rating":
         return b.rating - a.rating;
-      case 'featured':
+      case "featured":
       default:
         return a.featured === b.featured ? 0 : a.featured ? -1 : 1;
     }
@@ -77,12 +106,12 @@ const Rooms = () => {
           {/* Filters and Sort Section */}
           <div className="mb-12">
             {/* Category Tabs */}
-            <div className="flex sm:justify-center gap-3 mb-8 overflow-x-auto scroll-hide snap-x snap-mandatory px-2">
+            <div className="flex sm:justify-center gap-3 mb-8 overflow-x-auto scroll-hide px-2 py-3">
               {roomCategories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => setActiveTab(category.id)}
-                  className={`px-6 py-3 rounded-full font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer snap-start ${
+                  className={`px-5 py-2 rounded-full font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer snap-start ${
                     activeTab === category.id
                       ? "bg-cyan-600 text-white shadow-lg"
                       : "bg-white text-gray-700 hover:bg-cyan-100 hover:text-cyan-700 shadow-md"
@@ -122,7 +151,12 @@ const Rooms = () => {
           </div>
 
           {/* Rooms Grid */}
-          {sortedRooms.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-12 flex flex-col items-center">
+            <Loader2 className="w-16 h-16 text-cyan-600 animate-spin" />
+            <p className="mt-4 text-gray-600">Loading rooms...</p>
+          </div>
+          ) : sortedRooms.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {sortedRooms.map((room) => (
                 <RoomCard
