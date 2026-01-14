@@ -93,29 +93,29 @@ const BookingSuccess = () => {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Room Type:</span>
                   <span className="font-semibold text-gray-900 capitalize">
-                    {bookingData.roomName}
+                    {bookingData.room.type}
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Booking Reference:</span>
                   <span className="font-mono text-cyan-600 font-semibold">
-                    #{bookingData.roomId}-{Date.now().toString().slice(-6)}
+                    #{bookingData.id}
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Total Nights:</span>
                   <span className="font-semibold text-gray-900">
-                    {bookingData.totalNights} night
-                    {bookingData.totalNights > 1 ? "s" : ""}
+                    {bookingData.nights} night
+                    {bookingData.nights > 1 ? "s" : ""}
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Total Amount:</span>
                   <span className="text-xl font-bold text-cyan-600">
-                    KSh {bookingData.totalPrice}
+                    KSh {bookingData.total}
                   </span>
                 </div>
               </div>
@@ -132,7 +132,7 @@ const BookingSuccess = () => {
                   <Users className="w-5 h-5 text-cyan-600" />
                   <div>
                     <p className="font-semibold text-gray-900">
-                      {bookingData.name}
+                      {bookingData.customer.name}
                     </p>
                     <p className="text-sm text-gray-600">Primary Guest</p>
                   </div>
@@ -142,7 +142,7 @@ const BookingSuccess = () => {
                   <Mail className="w-5 h-5 text-cyan-600" />
                   <div>
                     <p className="font-semibold text-gray-900">
-                      {bookingData.email}
+                      {bookingData.customer.email}
                     </p>
                     <p className="text-sm text-gray-600">Email</p>
                   </div>
@@ -152,7 +152,7 @@ const BookingSuccess = () => {
                   <Phone className="w-5 h-5 text-cyan-600" />
                   <div>
                     <p className="font-semibold text-gray-900">
-                      {bookingData.phone}
+                      {bookingData.customer.phone}
                     </p>
                     <p className="text-sm text-gray-600">Phone</p>
                   </div>
