@@ -12,12 +12,14 @@ import Booking from "./pages/Booking";
 import BookingSuccess from "./pages/BookingSuccess";
 import Layout from "./layout/Layout";
 import { Toaster } from "react-hot-toast";
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
   return (
     <div>
       <Toaster position="top-right" reverseOrder={false} />
       <Navigation />
+      <ScrollToTop />
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
