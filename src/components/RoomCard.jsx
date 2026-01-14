@@ -1,4 +1,4 @@
-import { Users, Star} from 'lucide-react';
+import { Users, Star } from "lucide-react";
 
 const RoomCard = ({ room, amenityIcons, onBookNow }) => {
   const renderStars = (rating) => {
@@ -27,10 +27,16 @@ const RoomCard = ({ room, amenityIcons, onBookNow }) => {
           className="w-full h-48 object-cover rounded-t-2xl"
         />
 
-        {/* Featured Badge */}
-        {room.featured && (
-          <div className="absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-            Featured
+        {/* Status Badge */}
+        {room.status === "available" && (
+          <div className="absolute top-3 left-3 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+            Available
+          </div>
+        )}
+
+        {room.status === "booked" && (
+          <div className="absolute top-3 left-3 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+            Booked
           </div>
         )}
 
@@ -58,7 +64,7 @@ const RoomCard = ({ room, amenityIcons, onBookNow }) => {
           </h3>
           <div className="flex items-center justify-between">
             <span className="text-sm text-cyan-600 font-medium capitalize">
-              {room.category} • {room.size}
+              {room.category} • {room.size} sqft
             </span>
           </div>
         </div>
@@ -106,9 +112,9 @@ const RoomCard = ({ room, amenityIcons, onBookNow }) => {
               <span className="text-lg sm:text-2xl font-bold text-gray-900">
                 KSh {room.price}
               </span>
-              {room.originalPrice && (
+              {room.original_price && (
                 <span className="text-sm text-gray-500 line-through">
-                  KSh {room.originalPrice}
+                  KSh {room.original_price}
                 </span>
               )}
             </div>
