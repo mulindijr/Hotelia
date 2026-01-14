@@ -18,8 +18,13 @@ import {
   CreditCard,
   Lock,
   MapPin,
+  MessageSquare,
+  Shield,
+  Utensils,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import API from "../api/api";
+import toast from "react-hot-toast";
 
 const Booking = () => {
   const location = useLocation();
@@ -30,7 +35,7 @@ const Booking = () => {
 
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
-  const [guests, setGuests] = useState(1);
+  // const [guests, setGuests] = useState(1);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -40,6 +45,11 @@ const Booking = () => {
   const [review, setReview] = useState("");
   const [reviewRating, setReviewRating] = useState(5);
   const [submittedReviews, setSubmittedReviews] = useState([]);
+  const [adults, setAdults] = useState(1);
+  const [children, setChildren] = useState(0);
+  const [country, setCountry] = useState("Kenya");
+  const [specialRequests, setSpecialRequests] = useState("");
+  const [notes, setNotes] = useState("");
 
   // Calculate total nights
   const getTotalNights = () => {
@@ -52,25 +62,44 @@ const Booking = () => {
   const totalNights = getTotalNights();
   const totalPrice = totalNights * room.price;
 
-  const handleSubmit = (e) => {
+  // Handle form submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const bookingData = {
-      roomId: room.id,
-      roomName: room.name,
-      checkIn,
-      checkOut,
-      guests,
-      name,
-      email,
-      phone,
-      totalNights,
-      totalPrice,
-      paymentMethod,
+    const bookingPayload = {
+      customer: {
+        name,
+        email,
+        phone,
+        country,
+      },
+      room_id: room.id,
+      check_in: checkIn,
+      check_out: checkOut,
+      adults: Number(adults),
+      children: Number(children),
+      special_requests: specialRequests || null,
+      notes: notes || null,
+      payment_method: paymentMethod === "mpesa" ? "M-Pesa" : "Pay on Arrival",
+      paid_amount: paymentMethod === "mpesa" ? totalPrice : 0,
     };
 
-    console.log("Booking Data:", bookingData);
-    navigate("/booking-success", { state: { bookingData } });
+    try {
+      const response = await API.post("/bookings", bookingPayload);
+
+      toast.success(response.data.message || "Booking successfull!");
+
+      navigate("/booking-success", {
+        state: {
+          bookingData: response.data.data,
+        },
+      });
+    } catch (error) {
+      const backendMessage =
+        error.response?.data?.error || error.response?.data?.message;
+      console.error("Booking failed:", backendMessage);
+      toast.error(backendMessage || "Booking failed. Please try again.");
+    }
   };
 
   const handleReviewSubmit = (e) => {
@@ -96,10 +125,14 @@ const Booking = () => {
         return <Wifi className="w-5 h-5" />;
       case "coffee":
         return <Coffee className="w-5 h-5" />;
+      case "breakfast":
+        return <Utensils className="w-5 h-5" />;
       case "air-conditioning":
         return <Snowflake className="w-5 h-5" />;
       case "parking":
         return <Car className="w-5 h-5" />;
+      case "security":
+        return <Shield className="w-5 h-5" />;
       default:
         return null;
     }
@@ -191,9 +224,15 @@ const Booking = () => {
                     ({room.reviews} reviews)
                   </span>
                 </div>
-                {room.featured && (
-                  <span className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-medium">
-                    Featured
+
+                {room.status === "available" && (
+                  <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    Available
+                  </span>
+                )}
+                {room.status === "booked" && (
+                  <span className="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    Booked
                   </span>
                 )}
               </div>
@@ -208,7 +247,9 @@ const Booking = () => {
                 </div>
                 <div className="flex items-center space-x-2">
                   <Square className="w-5 h-5 text-cyan-600" />
-                  <span className="text-sm text-gray-600">{room.size}</span>
+                  <span className="text-sm text-gray-600">
+                    {room.size} sqft
+                  </span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Bed className="w-5 h-5 text-cyan-600" />
@@ -359,10 +400,10 @@ const Booking = () => {
                     KSh {room.price}
                   </span>
                   <span className="text-md sm:text-lg text-gray-500 line-through">
-                    KSh {room.originalPrice}
+                    KSh {room.original_price}
                   </span>
                   <span className="text-green-600 font-semibold">
-                    {Math.round((1 - room.price / room.originalPrice) * 100)}%
+                    {Math.round((1 - room.price / room.original_price) * 100)}%
                     OFF
                   </span>
                 </div>
@@ -401,19 +442,34 @@ const Booking = () => {
                 </div>
 
                 {/* Guests */}
-                <div>
-                  <label className="text-sm font-medium mb-2 flex items-center">
-                    <Users className="w-4 h-4 mr-2 text-cyan-600" />
-                    Guests
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max={room.occupants}
-                    value={guests}
-                    onChange={(e) => setGuests(e.target.value)}
-                    className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                  />
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <label className="text-sm font-medium mb-2 flex items-center">
+                      <Users className="w-4 h-4 mr-2 text-cyan-600" />
+                      Adults
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      max={room.occupants}
+                      value={adults}
+                      onChange={(e) => setAdults(e.target.value)}
+                      className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="text-sm font-medium mb-2 flex items-center">
+                      <Users className="w-4 h-4 mr-2 text-cyan-600" />
+                      Children
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={children}
+                      onChange={(e) => setChildren(e.target.value)}
+                      className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    />
+                  </div>
                 </div>
 
                 {/* Personal Information */}
@@ -459,6 +515,45 @@ const Booking = () => {
                       className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     />
                   </div>
+
+                  <div>
+                    <label className="text-sm font-medium mb-2 flex items-center">
+                      <Phone className="w-4 h-4 mr-2 text-cyan-600" />
+                      Country
+                    </label>
+                    <input
+                      type="text"
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                      required
+                      className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    />
+                  </div>
+                </div>
+
+                {/* Special Request & Notes */}
+                <div className="mt-6">
+                  <label className="text-sm font-medium mb-2 flex items-center">
+                    <MessageSquare className="w-4 h-4 mr-2 text-cyan-600" />
+                    Special Requests
+                  </label>
+                  <textarea
+                    value={specialRequests}
+                    onChange={(e) => setSpecialRequests(e.target.value)}
+                    rows={3}
+                    className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  />
+
+                  <label className="text-sm font-medium mb-2 flex items-center mt-4">
+                    <MessageSquare className="w-4 h-4 mr-2 text-cyan-600" />
+                    Additional Notes
+                  </label>
+                  <textarea
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    rows={3}
+                    className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  />
                 </div>
 
                 {/* Payment Options */}
@@ -609,7 +704,7 @@ const Booking = () => {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-4 px-6 rounded-lg font-semibold text-lg transition-colors duration-200 mt-4"
+                  className="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-4 px-6 rounded-lg font-semibold text-lg transition-colors cursor-pointer duration-200 mt-4"
                 >
                   {paymentMethod === "mpesa"
                     ? "Pay with M-Pesa"
