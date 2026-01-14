@@ -11,10 +11,12 @@ import Gallery from "./pages/Gallery";
 import Booking from "./pages/Booking";
 import BookingSuccess from "./pages/BookingSuccess";
 import Layout from "./layout/Layout";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
     <div>
+      <Toaster position="top-right" reverseOrder={false} />
       <Navigation />
       <Routes>
         <Route element={<Layout />}>
