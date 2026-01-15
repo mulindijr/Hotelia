@@ -61,7 +61,7 @@ const BookingSuccess = () => {
               Rooms
             </Link>
             <ChevronRight className="w-4 h-4" />
-            <span className="text-gray-800">Booking Confirmed</span>
+            <span className="text-gray-800">Reservation Received</span>
           </div>
         </div>
 
@@ -73,7 +73,7 @@ const BookingSuccess = () => {
               <CheckCircle className="w-20 h-20 text-green-500" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Booking Confirmed!
+              Reservation Received!
             </h1>
             <p className="text-gray-600 text-lg">
               Thank you for your booking. Your reservation has been successfully
@@ -213,7 +213,7 @@ const BookingSuccess = () => {
               <div className="flex justify-between">
                 <span className="text-gray-600">Payment Method:</span>
                 <span className="font-semibold text-gray-900 capitalize">
-                  {bookingData.paymentMethod === "mpesa"
+                  {bookingData.paymentMethod === "M-Pesa"
                     ? "M-Pesa"
                     : "Pay on Arrival"}
                 </span>
@@ -258,7 +258,10 @@ const BookingSuccess = () => {
               <li className="flex items-start space-x-2">
                 <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
                 <span>
-                  Booking confirmation email sent to {bookingData.email}
+                  Booking confirmation email sent to{" "}
+                  <span className="text-sm sm:text-lg font-semibold sm:font-bold">
+                    {bookingData.customer.email}
+                  </span>
                 </span>
               </li>
               <li className="flex items-start space-x-2">
