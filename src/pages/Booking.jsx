@@ -21,6 +21,7 @@ import {
   MessageSquare,
   Shield,
   Utensils,
+  Loader2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import API from "../api/api";
@@ -33,9 +34,8 @@ const Booking = () => {
 
   if (!room) return <p>No room selected.</p>;
 
-  const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
-  // const [guests, setGuests] = useState(1);
+  const [checkIn, setCheckIn] = useState(location.state?.checkIn || "");
+  const [checkOut, setCheckOut] = useState(location.state?.checkOut || "");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -45,11 +45,16 @@ const Booking = () => {
   const [review, setReview] = useState("");
   const [reviewRating, setReviewRating] = useState(5);
   const [submittedReviews, setSubmittedReviews] = useState([]);
-  const [adults, setAdults] = useState(1);
-  const [children, setChildren] = useState(0);
+  const [adults, setAdults] = useState(location.state?.adults || 1);
+  const [children, setChildren] = useState(location.state?.children || 0);
   const [country, setCountry] = useState("Kenya");
   const [specialRequests, setSpecialRequests] = useState("");
   const [notes, setNotes] = useState("");
+  const [checkInError, setCheckInError] = useState("");
+  const [checkOutError, setCheckOutError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Calculate total nights
   const getTotalNights = () => {
@@ -62,9 +67,100 @@ const Booking = () => {
   const totalNights = getTotalNights();
   const totalPrice = totalNights * room.price;
 
+  // Ensure check-in date is today or later
+  const isValidCheckIn = (checkIn) => {
+    if (!checkIn) return false;
+    const today = new Date();
+    const checkInDate = new Date(checkIn);
+    today.setHours(0, 0, 0, 0); // reset time for comparison
+    return checkInDate >= today;
+  };
+
+  // Ensure check-out is after check-in
+  const isValidCheckOut = (checkIn, checkOut) => {
+    if (!checkIn || !checkOut) return false;
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+    return checkOutDate > checkInDate;
+  };
+
+  const handleCheckInChange = (e) => {
+    const value = e.target.value;
+    setCheckIn(value);
+
+    if (!isValidCheckIn(value)) {
+      setCheckInError("Check-in date cannot be in the past");
+    } else {
+      setCheckInError("");
+    }
+
+    // Re-validate check-out whenever check-in changes
+    if (checkOut && !isValidCheckOut(value, checkOut)) {
+      setCheckOutError("Check-out must be after check-in");
+    } else {
+      setCheckOutError("");
+    }
+  };
+
+  const handleCheckOutChange = (e) => {
+    const value = e.target.value;
+    setCheckOut(value);
+
+    if (!isValidCheckOut(checkIn, value)) {
+      setCheckOutError("Check-out must be after check-in");
+    } else {
+      setCheckOutError("");
+    }
+  };
+
+  // Simple email regex validation
+  const isValidEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  // Accepts 07XXXXXXXX, 2547XXXXXXXX, or +2547XXXXXXXX
+  const isValidPhone = (phone) => {
+    const regex = /^(?:\+254|0|254)7\d{8}$/;
+    return regex.test(phone);
+  };
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+
+    if (!isValidEmail(value)) {
+      setEmailError("Invalid Email Address");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const handlePhoneChange = (e) => {
+    const value = e.target.value;
+    setPhone(value);
+
+    if (!isValidPhone(value)) {
+      setPhoneError("Invalid Phone Number");
+    } else {
+      setPhoneError("");
+    }
+  };
+
+  const isFormValid =
+    name.trim() &&
+    isValidEmail(email) &&
+    isValidPhone(phone) &&
+    isValidCheckIn(checkIn) &&
+    isValidCheckOut(checkIn, checkOut) &&
+    adults > 0 &&
+    Number(adults) + Number(children) <= room.occupants;
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isFormValid) return;
 
     const bookingPayload = {
       customer: {
@@ -85,6 +181,9 @@ const Booking = () => {
     };
 
     try {
+
+      setIsSubmitting(true);
+
       const response = await API.post("/bookings", bookingPayload);
 
       toast.success(response.data.message || "Booking successfull!");
@@ -99,6 +198,8 @@ const Booking = () => {
         error.response?.data?.error || error.response?.data?.message;
       console.error("Booking failed:", backendMessage);
       toast.error(backendMessage || "Booking failed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -421,10 +522,15 @@ const Booking = () => {
                     <input
                       type="date"
                       value={checkIn}
-                      onChange={(e) => setCheckIn(e.target.value)}
+                      onChange={handleCheckInChange}
                       required
                       className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     />
+                    {checkInError && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {checkInError}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label className="text-sm font-medium mb-2 flex items-center">
@@ -434,10 +540,15 @@ const Booking = () => {
                     <input
                       type="date"
                       value={checkOut}
-                      onChange={(e) => setCheckOut(e.target.value)}
+                      onChange={handleCheckOutChange}
                       required
                       className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     />
+                    {checkOutError && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {checkOutError}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -453,7 +564,7 @@ const Booking = () => {
                       min="1"
                       max={room.occupants}
                       value={adults}
-                      onChange={(e) => setAdults(e.target.value)}
+                      onChange={(e) => setAdults(Number(e.target.value))}
                       className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     />
                   </div>
@@ -466,7 +577,7 @@ const Booking = () => {
                       type="number"
                       min="0"
                       value={children}
-                      onChange={(e) => setChildren(e.target.value)}
+                      onChange={(e) => setChildren(Number(e.target.value))}
                       className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     />
                   </div>
@@ -496,10 +607,13 @@ const Booking = () => {
                     <input
                       type="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={handleEmailChange}
                       required
                       className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     />
+                    {emailError && (
+                      <p className="text-red-500 text-sm mt-1">{emailError}</p>
+                    )}
                   </div>
 
                   <div>
@@ -510,15 +624,18 @@ const Booking = () => {
                     <input
                       type="tel"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      onChange={handlePhoneChange}
                       required
                       className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                     />
+                    {phoneError && (
+                      <p className="text-red-500 text-sm mt-1">{phoneError}</p>
+                    )}
                   </div>
 
                   <div>
                     <label className="text-sm font-medium mb-2 flex items-center">
-                      <Phone className="w-4 h-4 mr-2 text-cyan-600" />
+                      <MapPin className="w-4 h-4 mr-2 text-cyan-600" />
                       Country
                     </label>
                     <input
@@ -569,7 +686,7 @@ const Booking = () => {
                       <button
                         type="button"
                         onClick={() => setPaymentMethod("mpesa")}
-                        className={`p-4 border-2 rounded-lg text-center transition-colors ${
+                        className={`p-4 border-2 rounded-lg text-center transition-colors cursor-pointer ${
                           paymentMethod === "mpesa"
                             ? "border-cyan-500 bg-cyan-50"
                             : "border-gray-300 hover:border-gray-400"
@@ -585,7 +702,7 @@ const Booking = () => {
                       <button
                         type="button"
                         onClick={() => setPaymentMethod("arrival")}
-                        className={`p-4 border-2 rounded-lg text-center transition-colors ${
+                        className={`p-4 border-2 rounded-lg text-center transition-colors cursor-pointer ${
                           paymentMethod === "arrival"
                             ? "border-cyan-500 bg-cyan-50"
                             : "border-gray-300 hover:border-gray-400"
@@ -610,7 +727,7 @@ const Booking = () => {
                           <li>Select Lipa Na M-Pesa</li>
                           <li>Select Pay Bill</li>
                           <li>Enter Business Number: 123456</li>
-                          <li>Enter Account Number: {phone}</li>
+                          <li>Enter Account Number: {"Your phone"}</li>
                           <li>Enter Amount: KSh {totalPrice || room.price}</li>
                           <li>Enter your M-Pesa PIN</li>
                           <li>Press OK to complete payment</li>
@@ -704,11 +821,24 @@ const Booking = () => {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-4 px-6 rounded-lg font-semibold text-lg transition-colors cursor-pointer duration-200 mt-4"
+                  disabled={!isFormValid || isSubmitting}
+                  className={`w-full py-4 px-6 rounded-lg font-semibold text-lg transition-all duration-200 mt-4 cursor-pointer
+                    ${
+                      !isFormValid || isSubmitting
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-cyan-600 hover:bg-cyan-700 text-white"
+                    }`}
                 >
-                  {paymentMethod === "mpesa"
-                    ? "Pay with M-Pesa"
-                    : "Confirm Booking"}
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Submitting...
+                    </span>
+                  ) : paymentMethod === "mpesa" ? (
+                    "Pay with M-Pesa"
+                  ) : (
+                    "Confirm Booking"
+                  )}
                 </button>
               </form>
             </div>
