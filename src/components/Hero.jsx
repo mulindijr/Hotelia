@@ -1,12 +1,40 @@
 import { useState } from "react";
 import bgImage from "../assets/hero/hero.jpg";
 import { Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const Hero = () => {
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
+
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    if (!checkInDate || !checkOutDate) {
+      toast.error("Please select both check-in and check-out dates.");
+      return;
+    }
+
+    if (new Date(checkOutDate) <= new Date(checkInDate)) {
+      toast.error("Check-out date must be after check-in date.");
+      return;
+    }
+
+    const today = new Date ();
+    today.setHours(0, 0, 0, 0);
+
+    if (new Date(checkInDate) < today) {
+      toast.error("Check-in date cannot be in the past.");
+      return;
+    }
+
+    navigate(
+      `/accommodation?checkIn=${checkInDate}&checkOut=${checkOutDate}&adults=${adults}&children=${children}`
+    );
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -101,7 +129,10 @@ const Hero = () => {
             </div>
 
             {/* Button */}
-            <button className="flex items-center justify-center gap-2 bg-cyan-500 text-white font-semibold py-3 rounded-full hover:bg-cyan-600 cursor-pointer transition duration-300">
+            <button
+              onClick={handleSearch}
+              className="flex items-center justify-center gap-2 bg-cyan-500 text-white font-semibold py-3 rounded-full hover:bg-cyan-600 cursor-pointer transition duration-300"
+            >
               <Search className="w-5 h-5" />
               <span className="hidden md:inline">Search</span>
             </button>
