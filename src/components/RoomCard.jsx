@@ -66,6 +66,7 @@ const RoomCard = ({ room, amenityIcons, onBookNow }) => {
             <span className="text-sm text-cyan-600 font-medium capitalize">
               {room.category} • {room.size} sqft
             </span>
+            <span className="text-sm text-cyan-600 font-medium capitalize">{room.type}</span>
           </div>
         </div>
 
