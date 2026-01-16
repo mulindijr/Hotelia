@@ -346,17 +346,6 @@ const Booking = () => {
                     ({room.reviews} reviews)
                   </span>
                 </div>
-
-                {room.status === "available" && (
-                  <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                    Available
-                  </span>
-                )}
-                {room.status === "booked" && (
-                  <span className="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                    Booked
-                  </span>
-                )}
               </div>
 
               {/* Room Specifications */}

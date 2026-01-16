@@ -27,19 +27,6 @@ const RoomCard = ({ room, amenityIcons, onBookNow }) => {
           className="w-full h-48 object-cover rounded-t-2xl"
         />
 
-        {/* Status Badge */}
-        {room.status === "available" && (
-          <div className="absolute top-3 left-3 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-            Available
-          </div>
-        )}
-
-        {room.status === "booked" && (
-          <div className="absolute top-3 left-3 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-            Booked
-          </div>
-        )}
-
         {/* Rating Badge */}
         <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 flex items-center gap-1">
           <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
