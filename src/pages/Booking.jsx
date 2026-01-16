@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Home,
@@ -11,7 +11,7 @@ import {
   Coffee,
   Snowflake,
   Car,
-  Calendar,
+  Calendar as CalendarIcon,
   User,
   Mail,
   Phone,
@@ -26,6 +26,8 @@ import {
 import { Link } from "react-router-dom";
 import API from "../api/api";
 import toast from "react-hot-toast";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
 const Booking = () => {
   const location = useLocation();
@@ -55,6 +57,7 @@ const Booking = () => {
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [bookedRanges, setBookedRanges] = useState([]);
 
   // Calculate total nights
   const getTotalNights = () => {
@@ -181,7 +184,6 @@ const Booking = () => {
     };
 
     try {
-
       setIsSubmitting(true);
 
       const response = await API.post("/bookings", bookingPayload);
@@ -201,6 +203,25 @@ const Booking = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  useEffect(() => {
+    const fetchAvailability = async () => {
+      const res = await API.get(`/rooms/${room.id}/availability`);
+      setBookedRanges(res.data.unavailable);
+    };
+
+    fetchAvailability();
+  }, [room.id]);
+
+  const isBookedDate = (date) => {
+    return bookedRanges.some(({ start, end }) => {
+      const d = date.setHours(0, 0, 0, 0);
+      return (
+        d >= new Date(start).setHours(0, 0, 0, 0) &&
+        d < new Date(end).setHours(0, 0, 0, 0)
+      );
+    });
   };
 
   const handleReviewSubmit = (e) => {
@@ -381,6 +402,26 @@ const Booking = () => {
               </div>
             </div>
 
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h3 className="text-lg font-semibold mb-4 text-center">
+                Room Availability
+              </h3>
+
+              <div className="flex justify-center">
+                <Calendar
+                  tileClassName={({ date }) =>
+                    isBookedDate(date) ? "booked-tile" : null
+                  }
+                  tileDisabled={({ date }) => isBookedDate(date)}
+                />
+              </div>
+
+              <div className="mt-4 text-sm text-gray-600 flex ml-20 items-center">
+                <span className="inline-block w-3 h-3 bg-red-400 mr-2 rounded"></span>
+                <p className="font-semibold">Booked dates</p>
+              </div>
+            </div>
+
             {/* Leave Review Button */}
             <div className="bg-white rounded-xl shadow-sm p-6">
               <div className="flex justify-between items-center">
@@ -516,7 +557,7 @@ const Booking = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-medium mb-2 flex items-center">
-                      <Calendar className="w-4 h-4 mr-2 text-cyan-600" />
+                      <CalendarIcon className="w-4 h-4 mr-2 text-cyan-600" />
                       Check-in
                     </label>
                     <input
@@ -534,7 +575,7 @@ const Booking = () => {
                   </div>
                   <div>
                     <label className="text-sm font-medium mb-2 flex items-center">
-                      <Calendar className="w-4 h-4 mr-2 text-cyan-600" />
+                      <CalendarIcon className="w-4 h-4 mr-2 text-cyan-600" />
                       Check-out
                     </label>
                     <input
