@@ -23,7 +23,7 @@ const Hero = () => {
       return;
     }
 
-    const today = new Date ();
+    const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     if (new Date(checkInDate) < today) {
@@ -64,43 +64,43 @@ const Hero = () => {
         </div>
 
         {/* Booking Card */}
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 sm:p-8 max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl py-2 pl-8 pr-4 max-w-4xl mx-auto">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             {/* Check-in */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+              <label className="text-sm font-medium text-gray-700 w-full sm:w-auto">
                 Check-in
               </label>
               <input
                 type="date"
                 value={checkInDate}
                 onChange={(e) => setCheckInDate(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300"
+                className="w-full sm:w-auto p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
               />
             </div>
 
             {/* Check-out */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+              <label className="text-sm font-medium text-gray-700 w-full sm:w-auto">
                 Check-out
               </label>
               <input
                 type="date"
                 value={checkOutDate}
                 onChange={(e) => setCheckOutDate(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300"
+                className="w-full sm:w-auto p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
               />
             </div>
 
             {/* Adults */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+              <label className="text-sm font-medium text-gray-700 w-full sm:w-auto">
                 Adults
               </label>
               <select
                 value={adults}
                 onChange={(e) => setAdults(parseInt(e.target.value))}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 bg-white"
+                className="w-full sm:w-auto p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
               >
                 {[1, 2, 3, 4, 5, 6].map((n) => (
                   <option key={n} value={n}>
@@ -111,14 +111,14 @@ const Hero = () => {
             </div>
 
             {/* Children */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+              <label className="text-sm font-medium text-gray-700 w-full sm:w-auto">
                 Children
               </label>
               <select
                 value={children}
                 onChange={(e) => setChildren(parseInt(e.target.value))}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-300 bg-white"
+                className="w-full sm:w-auto p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
               >
                 {[0, 1, 2, 3, 4].map((n) => (
                   <option key={n} value={n}>
@@ -131,7 +131,7 @@ const Hero = () => {
             {/* Button */}
             <button
               onClick={handleSearch}
-              className="flex items-center justify-center gap-2 bg-cyan-500 text-white font-semibold py-3 rounded-full hover:bg-cyan-600 cursor-pointer transition duration-300"
+              className="w-full lg:w-auto flex items-center justify-center gap-2 bg-cyan-500 text-white font-semibold p-3 lg:p-2 rounded-full hover:bg-cyan-600 transition duration-300 cursor-pointer"
             >
               <Search className="w-5 h-5" />
               <span className="hidden md:inline">Search</span>
