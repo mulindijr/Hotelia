@@ -1,6 +1,10 @@
 import { Users, Star } from "lucide-react";
 
 const RoomCard = ({ room, amenityIcons, onBookNow }) => {
+
+  const API_BASE = import.meta.env.VITE_APP_API_URL;
+  const imgSrc = `${API_BASE}/storage/${room.image}`;
+
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, index) => (
       <Star
@@ -22,7 +26,7 @@ const RoomCard = ({ room, amenityIcons, onBookNow }) => {
       {/* Room Image */}
       <div className="relative">
         <img
-          src={room.image}
+          src={imgSrc}
           alt={room.name}
           className="w-full h-48 object-cover rounded-t-2xl"
         />
@@ -53,7 +57,9 @@ const RoomCard = ({ room, amenityIcons, onBookNow }) => {
             <span className="text-sm text-cyan-600 font-medium capitalize">
               {room.category} • {room.size} sqft
             </span>
-            <span className="text-sm text-cyan-600 font-medium capitalize">{room.type}</span>
+            <span className="text-sm text-cyan-600 font-medium capitalize">
+              {room.type}
+            </span>
           </div>
         </div>
 
@@ -98,11 +104,11 @@ const RoomCard = ({ room, amenityIcons, onBookNow }) => {
           <div>
             <div className="flex items-baseline gap-2">
               <span className="text-lg sm:text-2xl font-bold text-gray-900">
-                KSh {room.price}
+                KSh {room?.price ? Number(room.price).toLocaleString() : "0"}
               </span>
               {room.original_price && (
                 <span className="text-sm text-gray-500 line-through">
-                  KSh {room.original_price}
+                  KSh {room?.original_price ? Number(room.original_price).toLocaleString() : "0"}
                 </span>
               )}
             </div>

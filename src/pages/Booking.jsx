@@ -59,6 +59,9 @@ const Booking = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookedRanges, setBookedRanges] = useState([]);
 
+  const API_BASE = import.meta.env.VITE_APP_API_URL;
+  const imgSrc = `${API_BASE}/storage/${room.image}`;
+
   // Calculate total nights
   const getTotalNights = () => {
     if (!checkIn || !checkOut) return 0;
@@ -249,7 +252,7 @@ const Booking = () => {
         return <Coffee className="w-5 h-5" />;
       case "breakfast":
         return <Utensils className="w-5 h-5" />;
-      case "air-conditioning":
+      case "ac":
         return <Snowflake className="w-5 h-5" />;
       case "parking":
         return <Car className="w-5 h-5" />;
@@ -330,7 +333,7 @@ const Booking = () => {
 
               {/* Room Image */}
               <img
-                src={room.image}
+                src={imgSrc}
                 alt={room.name}
                 className="w-full h-80 object-cover rounded-lg mb-6"
               />
@@ -528,10 +531,12 @@ const Booking = () => {
               <div className="mb-6 p-4 bg-cyan-50 rounded-lg">
                 <div className="flex items-baseline space-x-2">
                   <span className="text-xl sm:text-3xl font-bold text-cyan-700">
-                    KSh {room.price}
+                    KSh{" "}
+                    {room?.price ? Number(room.price).toLocaleString() : "0"}
                   </span>
                   <span className="text-md sm:text-lg text-gray-500 line-through">
-                    KSh {room.original_price}
+                    KSh{" "}
+                    {room?.original_price ? Number(room.original_price).toLocaleString() : "0"}
                   </span>
                   <span className="text-green-600 font-semibold">
                     {Math.round((1 - room.price / room.original_price) * 100)}%
@@ -815,7 +820,7 @@ const Booking = () => {
                           <div className="text-sm text-amber-700 mt-1">
                             {checkIn
                               ? `2 hours after ${new Date(
-                                  checkIn
+                                  checkIn,
                                 ).toLocaleDateString()} check-in time`
                               : "Your selected check-in date"}
                           </div>
